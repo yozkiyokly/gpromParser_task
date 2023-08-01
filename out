@@ -1,0 +1,44 @@
+2012-02-13 14:39:22 1RwtJa-000AFB-07 => :blackhole: <tpxmuwr@somehost.ru> R=blackhole_router
+2012-02-13 14:39:22 1RwtJa-000AFB-07 Completed
+2012-02-13 14:39:22 1RookS-000Pg8-VO == udbbwscdnbegrmloghuf@london.com R=dnslookup T=remote_smtp defer (-44): SMTP error from remote mail server after RCPT TO:<udbbwscdnbegrmloghuf@london.com>: host mx0.gmx.com [74.208.5.90]: 450 4.3.2 Too many mails (mail bomb), try again in 1 hour(s) 25 minute(s) and see ( http://portal.gmx.net/serverrules ) {mx-us011}
+2012-02-13 14:39:22 1RookS-000Pg8-VO ** fwxvparobkymnbyemevz@london.com: retry timeout exceeded
+2012-02-13 14:39:22 1QcGoJ-000DxQ-75 Completed
+2012-02-13 14:39:22 1RwtJa-0009RI-2d <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1289 id=120213143629.COM_FM_END.205359@whois.somehost.ru
+2012-02-13 14:39:22 1RwtJa-000AFJ-3B <= <> R=1RookS-000Pg8-VO U=mailnull P=local S=3958
+2012-02-13 14:39:22 1RwtJa-000AFJ-3B => :blackhole: <tpxmuwr@somehost.ru> R=blackhole_router
+2012-02-13 14:39:22 1RwtJa-000AFJ-3B Completed
+2012-02-13 14:39:22 1Rm0kE-00027I-IY == udbbwscdnbegrmloghuf@london.com R=dnslookup T=remote_smtp defer (-44): SMTP error from remote mail server after RCPT TO:<udbbwscdnbegrmloghuf@london.com>: host mx0.gmx.com [74.208.5.90]: 450 4.3.2 Too many mails (mail bomb), try again in 1 hour(s) 24 minute(s) and see ( http://portal.gmx.net/serverrules ) {mx-us014}
+2012-02-13 14:39:22 1Rm0kE-00027I-IY ** fwxvparobkymnbyemevz@london.com: retry timeout exceeded
+2012-02-13 14:39:22 1RwtJa-0009RI-5L <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1260 id=120213143629.COM_FM_END.125492@whois.somehost.ru
+2012-02-13 14:39:22 1RookS-000Pg8-VO Completed
+2012-02-13 14:39:22 1RwtJa-000AGs-7A <= <> R=1Rm0kE-00027I-IY U=mailnull P=local S=2551
+2012-02-13 14:39:22 1RwtJa-0009RI-7W <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=2229 id=120213143628.DOMAIN_FEEDBACK_MAIL.503141@whois.somehost.ru
+2012-02-13 14:39:22 1RwtJa-000AGs-7A => :blackhole: <tpxmuwr@somehost.ru> R=blackhole_router
+2012-02-13 14:39:22 1RwtJa-000AGs-7A Completed
+2012-02-13 14:39:22 1RwtJY-0009RI-Ai == grereyjbpddf@gmail.com R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-Ai == wpsmbwocxmcy@yandex.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-CQ == sdhigft@post.cz R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-E4 == bnkahhv@mail.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-E4 == ldtyzggfqejxo@mail.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-E4 == eqkhojhkgag@rambler.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1Rm0kE-00027I-IY Completed
+2012-02-13 14:39:22 1RwtJa-0009RI-9n <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1268 id=120213143628.COM_FM_END.961254@whois.somehost.ru
+2012-02-13 14:39:22 1RwtJa-0009RI-KL <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1716 id=120213143628.BLOCKED.453962@whois.somehost.ru
+2012-02-13 14:39:22 1RwtJY-0009RI-E4 == grereyjbpddf@gmail.com R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-E4 == jjcvpsc@goldenstudio.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJY-0009RI-Fs == rpjbpure@yandex.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:22 1RwtJa-0009RI-T1 <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1658 id=120213143617.AUCTION_RENEW.146146@whois.somehost.ru
+2012-02-13 14:39:23 1RwtJY-0009RI-Fs == nigjbvw@gmail.com R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:23 1RwtJY-0009RI-JK == bnkahhv@mail.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:23 1RwtJY-0009RI-JK == eqkhojhkgag@rambler.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:23 1RwtJY-0009RI-JK == evuusvhsxv@yandex.ru R=dnslookup T=remote_smtp defer (-1): domain matches queue_smtp_domains, or -odqs set
+2012-02-13 14:39:23 1RwtJa-0009RI-VU <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1703 id=120213143616.AUCTION_RENEW.901122@whois.somehost.ru
+2012-02-13 14:39:23 1RwtJb-0009RI-1j <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1703 id=120213143616.AUCTION_RENEW.843481@whois.somehost.ru
+2012-02-13 14:39:23 1RwtJb-0009RI-3i <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1673 id=120213143616.AUCTION_RENEW.787620@whois.somehost.ru
+2012-02-13 14:39:23 1RwtJb-0009RI-5g <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1673 id=120213143616.AUCTION_RENEW.739890@whois.somehost.ru
+2012-02-13 14:39:23 1RwtJb-0009RI-7J <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=4018 id=120213143615.OI_STAT_CHNG_HOSTING_UPDATED.956603@whois.somehost.ru
+2012-02-13 14:39:23 1RwtEg-0002zL-Mh ** thauocarief@yahoo.com R=dnslookup T=remote_smtp: SMTP error from remote mail server after end of data: host mta7.am0.yahoodns.net [66.94.237.64]: 554 delivery error: dd Sorry your message to thauocarief@yahoo.com cannot be delivered. This account has been disabled or discontinued [#102]. - mta1229.mail.mud.yahoo.com
+2012-02-13 14:39:23 1RwtJb-0009RI-9N <= tpxmuwr@somehost.ru H=mail.somehost.com [84.154.134.45] P=esmtp S=1655 id=120213143615.AUCTION_RENEW.609165@whois.somehost.ru
+2012-02-13 14:39:23 1RwtJb-000Ab2-9u <= <> R=1RwtEg-0002zL-Mh U=mailnull P=local S=2303
+2012-02-13 14:39:23 1RwtJb-000Ab2-9u => :blackhole: <tpxmuwr@somehost.ru> R=blackhole_router
+2012-02-13 14:39:23 1RwtJb-000Ab2-9u Completed
