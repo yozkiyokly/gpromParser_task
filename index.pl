@@ -18,6 +18,7 @@ print printHeader("Yozki perl maillog parser with searchFiltering");
 $countLog=checkLogTable($dbh);
 
 /* ф-ция восстановления буфера после падения ДБ начнётся с этого запроса:
+############
 # Красивое regexp_SUBSTR в один запрос предлагает Mysql,  начиная с версии 8, 
 # так ведь не везде есть восьмёрка! не говоря о десятке.
 # ...3-aug-2023... Проставил-таки восьмёрку у себя на хостинге в spaceWEB. 

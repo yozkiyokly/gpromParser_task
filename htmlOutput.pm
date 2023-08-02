@@ -34,7 +34,7 @@ print <<HTML;
 HTML
 }
 
-#---#############
+#---############# Сюда же пока разщмещён вывод админ-меню
 sub checkLogTable($dbh){
 $query = "select count(*), MIN(created) AS minDate, MAX(created) AS maxDate  FROM message";
 $sth = $dbh->prepare($query);
