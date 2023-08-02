@@ -1,4 +1,5 @@
-# Maillog parser with DBstorage and rapid analisys abilities
+#gpromParser_task
+Maillog parser with DBstorage and rapid analisys abilities
 Employment task for perl devel position in GP JSC co. 
 Perl script index.pl must parse a maillog (out.small) and push the data to the DB.
 Once pushed, it must gave ability to search base by sender address.
