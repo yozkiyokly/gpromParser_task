@@ -1,24 +1,25 @@
 # package HTMLOutput;
 
-#----------------------------------------------------------------------
+#---###########
 sub printHeader($title){
+charset('utf-8');
 return header,'
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//RU" >
 <html lang="ru">
 <head>
-<meta charset="UTF8" />
+<meta charset="UTF-8" />
 <title>',@_[0],'</title></head>
 <body>';
 }
 
-#----------------------------------------------------------------------
+#---###########
 sub printFooter(){
 print "<br><br><pre><small><font color='grey'>Прошу простить за дзен в оформлении: \nпредполагая, что первичным для анализа навыков и стиля мышления претендента является код, \nпредпочитаю посвятить больше времени именно этой стороне дела.\n\n
 Sincerely, WRB-RIPN (yozki.com)</small></pre><font>";
 print "\n\n</body></html>\n\n";}
 
 
-#----------------------------------------------------------------------
+#---##########
 sub searchForm($search){
 print <<HTML;
 <form method="get" name="searching" action="$baseurl/index.pl">
@@ -32,7 +33,17 @@ print <<HTML;
 HTML
 }
 
+#---#############
+sub checkLogTable($dbh){
+$query = "select count(*)  FROM log";
+$sth = $dbh->prepare($query);
+$sth->execute();
+@data = $sth->fetchrow_array();
+	print "<br>total rows in logtable is "	.	$data[0];
+	
+}
 
+#---##################
 sub searchResultsPrint($search,$dbh){
 #-------found log strings and do listing inside primitive table:
 print "<table border=0 width=80%>\n";

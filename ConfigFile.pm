@@ -11,15 +11,19 @@ sub ConnectToMySql {
     # С переходом к стрикту весь этот мусор будет смыт.
     use Sys::Hostname;
     if (hostname() =~ 'yozki'){
+use DBD::MariaDB; # для отладочного сервера (где Debian bookworm _Testing_).
+         $port=3306;
          $db = "gprom";
          $userid = "gprom";
          $passwd = "miller";
         }else{
+use DBD::mysql; # и надо же mySQL устареть! Теперь гляньте - МарияДБ и внезапное участие Оракла.
+         $port=3308;
          $db = "yozki";
          $userid = "yozki";
-         $passwd = "qwe123";
+         $passwd = "qwe123_QWE123";
         }
-    my $connectionInfo="dbi:mysql:$db;$host";
+    my $connectionInfo="dbi:mysql:$db;$host;$port";
     my $dbHandler = DBI->connect($connectionInfo,$userid,$passwd);
     return $dbHandler;
 }
