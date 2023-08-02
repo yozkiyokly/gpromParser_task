@@ -2,14 +2,15 @@
 
 #---###########
 sub printHeader($title){
-charset('utf-8');
+charset('utf-8'); # Всегда забываю о кодировке: вспоминаю при появлении кракозябров.
 return header,'
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//RU" >
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
 <title>',@_[0],'</title></head>
-<body>';
+<body>
+';
 }
 
 #---###########
@@ -35,12 +36,35 @@ HTML
 
 #---#############
 sub checkLogTable($dbh){
-$query = "select count(*)  FROM log";
+$query = "select count(*), MIN(created) AS minDate, MAX(created) AS maxDate  FROM message";
+$sth = $dbh->prepare($query);
+$sth->execute();
+@dataOld = $sth->fetchrow_array();
+
+$query = "select count(*), MIN(created) AS minDate, MAX(created) AS maxDate  FROM log";
 $sth = $dbh->prepare($query);
 $sth->execute();
 @data = $sth->fetchrow_array();
-	print "<br>total rows in logtable is "	.	$data[0];
-	
+	print 	"<table border=0><tr>
+			<td>В предыдущей загрузке: <b>$dataOld[0]</b> строк.<br>
+			min: <b>$dataOld[1]</b><br>
+			max: <b>$dataOld[2]</b><br></td>";
+	print "<td width='10%'>&nbsp;</td>\n" ;
+	print "<td>В аналитическом буфере: <b>"	.	$data[0]. "</b> строк<br>
+			min: <b>$data[1]</b> <br>
+			max: <b>$data[2]</b> <br></td></tr>\n" ;
+
+
+	print "<br><tr><td valign=bottom>
+	<form action='?refill=1'>
+	<input type=submit mame='restore' value='Восстановить из предыдущей загрузки'><br>\n
+	</td><td></td><td valign=bottom>
+	<input type=file mame='upload' value='' title='Выбрать новый файл'><br>
+	<input type=submit name=submit value='...загрузить и обработать новый лог'>
+	</form>
+	</td>
+	</tr></table>";
+return 	$data[0];
 }
 
 #---##################
