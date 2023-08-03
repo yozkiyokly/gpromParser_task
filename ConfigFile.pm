@@ -10,7 +10,7 @@ sub ConnectToMySql {
     # Серверозависимые credentials для БД ради единства версии на тестовом сервере и на гитхабе:
     # С переходом к стрикту весь этот мусор будет смыт.
     use Sys::Hostname;
-    if (hostname() =~ 'yozki'){
+    if (hostname() == 'yozki'){
 use DBD::MariaDB; # для отладочного сервера (где Debian bookworm _Testing_).
          $port=3306;
          $db = "gprom";

@@ -3,7 +3,7 @@
 #---###########
 sub printHeader($title){
 charset('utf-8'); # Всегда забываю о кодировке: вспоминаю при появлении кракозябров.
-return header,'
+print header.'
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//RU" >
 <html lang="ru">
 <head>
@@ -34,7 +34,7 @@ print <<HTML;
 HTML
 }
 
-#---############# Сюда же пока разщмещён вывод админ-меню
+#---############# Сюда же временнно разщмещён вывод админ-меню:
 sub checkLogTable($dbh){
 $query = "select count(*), MIN(created) AS minDate, MAX(created) AS maxDate  FROM message";
 $sth = $dbh->prepare($query);
@@ -45,25 +45,31 @@ $query = "select count(*), MIN(created) AS minDate, MAX(created) AS maxDate  FRO
 $sth = $dbh->prepare($query);
 $sth->execute();
 @data = $sth->fetchrow_array();
-	print 	"<table border=0><tr>
-			<td>В предыдущей загрузке: <b>$dataOld[0]</b> строк.<br>
-			min: <b>$dataOld[1]</b><br>
-			max: <b>$dataOld[2]</b><br></td>";
-	print "<td width='10%'>&nbsp;</td>\n" ;
-	print "<td>В аналитическом буфере: <b>"	.	$data[0]. "</b> строк<br>
-			min: <b>$data[1]</b> <br>
-			max: <b>$data[2]</b> <br></td></tr>\n" ;
+	print	"<table border=0 cellpadding=8><tr>
+			<td valign='top'>В предыдущей загрузке: <b>$dataOld[0]</b> строк.<br>";
+	print	"<small>	min: <b>$dataOld[1]</b><br>
+			max: <b>$dataOld[2]</b></small>" if  $dataOld[0];
+	print	"</td>";
 
+	print	"<td width='10%'>&nbsp;</td>\n" ;
+	print	"<td valign='top'>В аналитическом буфере: <b>"	.	$data[0]. "</b> строк<br>";
+	print	"<small> min: <b>$data[1]</b> <br> 
+			max: <b>$data[2]</b></small> " if $data[0];
+	print	"</td></tr>\n" ;
 
-	print "<br><tr><td valign=bottom>
-	<form action='?refill=1'>
-	<input type=submit mame='restore' value='Восстановить из предыдущей загрузки'><br>\n
-	</td><td></td><td valign=bottom>
-	<input type=file mame='upload' value='' title='Выбрать новый файл'><br>
-	<input type=submit name=submit value='...загрузить и обработать новый лог'>
-	</form>
-	</td>
-	</tr></table>";
+	print	"<tr><td colspan=3 bgcolor='ffebeb'> Аналитическая таблица пуста. <br>
+			Восстановите предыдущую загрузку или обработайте новый файл лога:</td></tr>" if !$data[0];
+
+	print	"<br><tr><td valign=bottom>
+			<form action='?refill=1' method=post>
+			<input type='submit' name='restore' value='Восстановить из предыдущей загрузки'></form>\n
+			</td><td></td><td valign=bottom>
+			<form action='?refill=2' method=post  ENCTYPE='MULTIPART/FORM-DATA'>
+			<input type='file' name='upload' value='' title='Выбрать новый файл'><br>
+			<input type='submit' name=submit value='...загрузить и обработать новый лог'>
+			</form>
+			</td>
+			</tr></table>";
 return 	$data[0];
 }
 

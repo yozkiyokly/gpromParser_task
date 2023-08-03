@@ -8,7 +8,7 @@ require ('./ConfigFile.pm');
 require ('./htmlOutput.pm');
 require ('./Parser.pm');
 
-print printHeader("Yozki perl maillog parser with searchFiltering");
+printHeader("Yozki perl maillog parser with searchFiltering");
 
 
 # Теперь найтмар. Мы проверяем таблицу 'log' на предмет упавшести МарияДБ\Миэскюэля
@@ -17,24 +17,51 @@ print printHeader("Yozki perl maillog parser with searchFiltering");
 # - либо отпарсить файл лога заново.
 $countLog=checkLogTable($dbh);
 
-/* ф-ция восстановления буфера после падения ДБ начнётся с этого запроса:
-############
+
+if (param('restore')){  # ф-ция восстановления буфера после падения ДБ
 # Красивое regexp_SUBSTR в один запрос предлагает Mysql,  начиная с версии 8, 
-# так ведь не везде есть восьмёрка! не говоря о десятке.
-# ...3-aug-2023... Проставил-таки восьмёрку у себя на хостинге в spaceWEB. 
+# так на 2023г. не везде есть восьмёрка! не говоря о десятке.
+#  Проставил-таки восьмёрку у себя на хостинге в spaceWEB. 
 # "Красивое вложенное с регекспом" заработало на унылом Shared-хостинге.:
 $query="INSERT INTO `log` (`created`, `int_id`, `str`, `address`)
-SELECT 
-	`created`,	`int_id`,	`str`,	
-	REGEXP_SUBSTR (str, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}') 
-FROM
-	`message`;";
-# Когда я уже заведу себе человеческий VDS и перестану страдать?
-*/
+ SELECT 
+ 	`created`,	`int_id`,	`str`,	
+ 	REGEXP_SUBSTR (str, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}') 
+ FROM
+ 	`message`;";
+				$sth = $dbh->prepare($query);
+			$sth->execute();
+
+# # Когда я уже заведу себе человеческий VDS и перестану страдать?
+
+#CЮДА вставить вставку
+print $query;
+} elsif (param('upload')){
+$query = new CGI;
+$filename = $query->upload('upload');
+$filename =~ s/.*[\/\\](.*)/$1/;
+$ss,$ff= parseMaillogFile($filename);
+print 'ss='.$ss. "  обработано строк: ".$ff;
+# open my $filehandle, $filename or die "Could not open $file: $!";
+
+#while ( my $line=<$filehandle> )
+#   {
+#     print "$line\n";
+#      $lineCounter++;
+#   }
+
+#   print $lineCounter;
+}
+
+
+
+
+ 
+
 
 $search = param("search"); #  Надо убрать. Эту переменную потом используем целый один раз.
 if ($countLog){searchForm($search);}
-else{print " Аналитическая таблица пуста. <br>Восстановите предыдущую загрузку или обработайте новый фапйл лога.";}
+else{}
 
 
 #Давайте дадим возможность загрузить лог на сервер
