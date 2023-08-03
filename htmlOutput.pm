@@ -15,8 +15,9 @@ print header.'
 
 #---###########
 sub printFooter(){
-print "<br><br><pre><small><font color='grey'>Прошу простить за дзен в оформлении: \nпредполагая, что первичным для анализа навыков и стиля мышления претендента является код, \nпредпочитаю посвятить больше времени именно этой стороне дела.\n\n
-Sincerely, WRB-RIPN (yozki.com)</small></pre><font>";
+print "<br><br><pre><small><font color='grey'>
+\n
+yozki.com</small></pre><font>";
 print "\n\n</body></html>\n\n";}
 
 
