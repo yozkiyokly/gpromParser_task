@@ -7,6 +7,8 @@ while(<FH>){
 # вначале откусим от лога дату. Она занимает 19 байт плюс пробел. После этого в логе будут разночтения.
 # не будем тошнить точностью поиска \d{4}(?:-\d{2}(?:-\d{2}(?: \d{2}(?::\d{2}(?::\d{2})?)?)?)?)?
 # а тупо резанём 19 циферок, минусиков и двоеточиев и пробелов.
+# Вот так: (^[0-9-:\s]{19})
+@parseBasic= $_ =~ /(^[0-9-:\s]{19})
 ####
 # затем следует выковырять внутренний ID. Пока по логу не видно, предусмотрено ли увеличение разрядности.
 # презюмирую, что разрядность не будет расширяться и ограничиваю парсинг фиксированной структурой,
@@ -15,9 +17,11 @@ while(<FH>){
 # но так и быть, ограничиваю набор знаков через \w
 #           \b\w{6}-\w{6}-\w{2}\b|  			^^^ спокойствия для:
 
-@parseBasic= $_ =~ /(^[0-9-:\s]{19})\s(\w{6}-\w{6}-\w{2})\b/s;
-					##-- отладка --:#  print "datetime: ";
-					##-- отладка --:#  print @parseBasic[0];
+\s(\w{6}-\w{6}-\w{2})\b/sx;
+					##-- отладка --:#  
+					print "datetime: ";
+					##-- отладка --:#  
+					print @parseBasic[0];
 					##-- отладка --:#  print "\nid: ";
 					##-- отладка --:#  print @parseBasic[1];
 					##-- отладка --:#  print "\n";
@@ -41,13 +45,12 @@ while(<FH>){
 ##########################
 
 @flag= $_ =~ /([=><*]{2})/s;
-					##-- отладка --:#  print "flag: ";
-					##-- отладка --:#  print @flag[0];
 if (@flag[0]){
-	if 		(@flag[0] eq "<="){$flag=1;}
-	elsif	(@flag[0] eq "=>"){$flag=2;}
-	elsif	(@flag[0] eq "=="){$flag=3;}
-	elsif	(@flag[0] eq "**"){$flag=4;}
+	print "<h3>".@flag[0]."</h3>";
+	if 		(@flag[0] eq "<="){$flag=1;}	#incoming
+	elsif	(@flag[0] eq "=>"){$flag=2;}	#outgoing	
+	elsif	(@flag[0] eq "=="){$flag=3;}	#delayed
+	elsif	(@flag[0] eq "**"){$flag=4;}	#stalled
 }else {$flag=0;}
 
 # Дерём первый встретившийся email. Вариант без бюрократического соблюдения RFC-5322, как у emailregex.com, но работает.
@@ -55,8 +58,6 @@ if (@flag[0]){
 @email= $_ =~ /
 \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b
 /gxs;
-					##-- отладка --:# print "\nemail: ";
-					##-- отладка --:# print $email[0];
 
 # вырезаем и остаток строки от завершения первого вхождения флага:
 @log_string= $_ =~ /
@@ -67,12 +68,6 @@ if (@flag[0]){
 # поэтому без \b мы змущены обрубать сучки в виде пробелов по краям:
 chomp(@log_string[0]);
 
-					##-- отладка --:	# print "\nstr:<font color='dark'>  ";
-					##-- отладка --:	# print @log_string[0];
-					##-- отладка --:	# print "\n</font><font color='grey'>full string:\n";
-					##-- отладка --:   	# print $_;
-					##-- отладка --:	# print "</font>\n\n\n";
-
 	if ($flag){ #Если флаг вообще имеет место, тогда вставляем в таблицы всё что напарсилось:
 		$query = "INSERT into log (created,	int_id,	str,	address) VALUES ('@parseBasic[0]', '@parseBasic[1]', '@log_string[0]', '@email[0]')";
 			$sth = $dbh->prepare($query);
@@ -81,7 +76,7 @@ chomp(@log_string[0]);
 			$sth = $dbh->prepare($query);
 			$sth->execute();
 		$inserts++;
-	}
+		}
 	$flag[0]="";
 	$totalStringsParsed++;
 }
@@ -92,5 +87,21 @@ return ($inserts,$totalStringsParsed);
 close(FH);
 }
 
+# Clear both innoDB and Memory tables with logs.
+sub truncateAllTables($dbh){
+truncateMessageTable($dbh);
+truncateLogTable($dbh);
+}
+
+sub truncateMessageTable($dbh){
+	 $query = "TRUNCATE TABLE message";
+	 $sth = $dbh->prepare($query);
+	 $sth->execute();
+}
+sub truncateLogTable($dbh){
+	 $query = "TRUNCATE TABLE log";
+	 $sth = $dbh->prepare($query);
+	 $sth->execute();
+}
 
 return true;

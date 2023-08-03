@@ -17,7 +17,6 @@ printHeader("Yozki perl maillog parser with searchFiltering");
 # - либо отпарсить файл лога заново.
 $countLog=checkLogTable($dbh);
 
-
 #######################
 # ф-ция восстановления буфера после падения ДБ:
 if (param('restore')){  
@@ -41,10 +40,14 @@ $query="INSERT INTO `log` (`created`, `int_id`, `str`, `address`)
 $query = new CGI;
 $filename = $query->upload('upload');
 $filename =~ s/.*[\/\\](.*)/$1/;
+truncateAllTables($dbh);
+
 $ss,$ff= parseMaillogFile($filename);
 print 'ss='.$ss. "  обработано строк: ".$ff;
 }
 
+#Очистка таблиц вручную, по ссылке:
+if ($delete==1){truncateMessageTable($dbh);}elsif($delete==2){truncateLogTable($dbh);}
 
 $search = param("search"); #  Надо убрать. Эту переменную потом используем целый один раз.
 #Если мем-таблица LOG не пуста, показываем форму поиска:
@@ -55,6 +58,11 @@ else{}
 if($countLog&&$search){ searchResultsPrint($search,$dbh);	}
 
 $dbh->disconnect; 
+
 printFooter();
+
+
+
+
 exit;
 

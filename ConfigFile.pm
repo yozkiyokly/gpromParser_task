@@ -12,7 +12,7 @@ sub ConnectToMySql {
     use Sys::Hostname;
     if (hostname() == 'yozki'){
 use DBD::MariaDB; # для отладочного сервера (где Debian bookworm _Testing_).
-         $port=3306;
+        my $port=3306;
          $db = "gprom";
          $userid = "gprom";
          $passwd = "miller";
