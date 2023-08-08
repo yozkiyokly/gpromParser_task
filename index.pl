@@ -1,68 +1,83 @@
 #!/usr/bin/perl
-use DBI;
+use strict;
 use warnings;
-							##-- отладка --:# use Data::Dump qw(dump);
-							##-- отладка --:# use strict;
-use CGI qw(:standard);
-require ('./ConfigFile.pm');
-require ('./htmlOutput.pm');
-require ('./Parser.pm');
+use DBI;
+use CGI qw(:standard); # WHY i used here this old stuff:
+# 1. CGI::Tiny still (2023) had not installed at any sharedHost servers where i have access
+# 2. Mojolicious::Lite.  Even LITE verison of mojo is too complex for such small scripts like this parser
+# 3. i would try use Plack::Handler::CGI but same problem: not installed at my shared hostngs.
+require './DatabaseRequests.pm';
+require './htmlOutput.pm';
+require './Parser.pm';
 
-printHeader("Yozki perl maillog parser with searchFiltering");
+my $baseurl="/cgi-bin/";
+my $resultsPerPage=100;
+my $search=param('search');
+my $fromPage=param('fromPage');$fromPage=1 if !$fromPage;
+# Куда складывать загруженные ранее файлы с логами( '/tmp/eximParserLogs' would be also good choice):
+my $upload_directory = '/var/www/gpromParser_task/upload';
+my $cgi=CGI->new;
+my $dbHandler = ConnectToMySql();   #Коннектимся в начале скрипта, до появления заголовков.
+use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
+
+printHeader('Yozki Exim maillog parser');
+warningsToBrowser(1);
 
 
-# Теперь найтмар. Мы проверяем таблицу 'log' на предмет упавшести МарияДБ\Миэскюэля
-# И если таблица "message" полна, а "log" - пуста, предлагаем: 
-# - либо зеркальнуть таблицу 'message';       *структура отличается: там нет пропарсенных email!!
+# Восстановление буфера после падения ДБ.
+# Если таблица "message" полна, а "log" - пуста, предлагаем: 
+# - либо зеркальнуть таблицу 'message';    *структура отличается: там нет пропарсенных email!!
 # - либо отпарсить файл лога заново.
-$countLog=checkLogTable($dbh);
 
-#######################
-# ф-ция восстановления буфера после падения ДБ:
 if (param('restore')){  
-# Красивое regexp_SUBSTR в один запрос предлагает Mysql,  начиная с версии 8, 
-# но в 2023 году не везде есть восьмёрка, не говоря о десятке.
-# Проставил-таки восьмёрку у себя на хостинге в spaceWEB. 
-# * Когда я уже заведу себе человеческий VDS и перестану страдать?
-# "Красивое вложенное с регекспом" заработало на унылом Shared-хостинге.:
-$query="INSERT INTO `log` (`created`, `int_id`, `str`, `address`)
- SELECT 
- 	`created`,	`int_id`,	`str`,	
- 	REGEXP_SUBSTR (str, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}') 
- FROM
- 	`message`;";
-				$sth = $dbh->prepare($query);
-			$sth->execute();
+restore_memtable_from_innodb_copy();
 
-########################
-# ф-ция загрузки файла из браузера:
+# загрузка файла из браузера:
 } elsif (param('upload')){ 
-$query = new CGI;
-$filename = $query->upload('upload');
-$filename =~ s/.*[\/\\](.*)/$1/;
-truncateAllTables($dbh);
-
-$ss,$ff= parseMaillogFile($filename);
-print 'ss='.$ss. "  обработано строк: ".$ff;
+    my $filename = $cgi->param('upload');
+    my $fh       = $cgi->upload('upload');
+    $filename=upload_file($filename,$fh,$upload_directory)or die 'upload function fails';
+    truncateAllTables($dbHandler); #Чистим обе таблицы под корень
+    my $strings_affected=parse_maillog_file($filename,$dbHandler);  
+    print '<br>  обработано строк: <b>'.$strings_affected.'</b><br>';
+}elsif (param('delete')){
+    truncateMessageTable($dbHandler) if param('delete')eq'prev';
+    truncateLogTable($dbHandler) if param('delete')eq'cache';
 }
+my ($numrowsOld,  $minDateOld, $maxDateOld, $numrowsCache, $minDateCache, $maxDateCache) = obtain_records_count($dbHandler);
+my $countLog=show_menu(obtain_records_count($dbHandler));
 
-#Очистка таблиц вручную, по ссылке:
-if ($delete==1){truncateMessageTable($dbh);}elsif($delete==2){truncateLogTable($dbh);}
+#TODO: add deletion links):
+#Очистка таблиц вручную, по ссылке 
+if (param('delete')&&param('delete') eq '1'){truncateMessageTable($dbHandler)or die "message table truncation fails";}
+elsif(param('delete')&&param('delete')eq '2'){truncateLogTable($dbHandler)or die "log table truncation fails";}
 
-$search = param("search"); #  Надо убрать. Эту переменную потом используем целый один раз.
-#Если мем-таблица LOG не пуста, показываем форму поиска:
+#Если мем-таблица LOG не пуста, показываем форму поиска.
 if ($countLog){searchForm($search);} 
 else{}
 
 # Отображаем результаты поиска строк с заданным адресом:
-if($countLog&&$search){ searchResultsPrint($search,$dbh);	}
+if($countLog && $search) {  
+    searchResultsPrint($search,$dbHandler,$baseurl,$resultsPerPage, $fromPage);
+}
 
-$dbh->disconnect; 
-
+#Finally: 
+$dbHandler->disconnect;
 printFooter();
 
-
-
+#######################
+# Загружаем файл _И_ направляем его в директорию, где копим старые загрузки.
+# Старые загрузки позже сможем обрабатывать mem-кэширующим движком, без MySQL.
+#######################
+sub upload_file{  
+    my ($filename,$fh) =shift;
+        open my $upload_fh, '>', "$upload_directory/$filename" or die "Can't open $upload_directory/$filename: $!";
+         open $fh, '<', $filename or die "Can't open '$filename': $!";
+         print $upload_fh $_ while <$fh>; #Переносим файл в файл, построчно. Не буфером.
+         close $fh;
+     close $upload_fh;
+return "$upload_directory/$filename";
+}
 
 exit;
 
