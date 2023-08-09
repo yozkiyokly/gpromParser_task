@@ -1,0 +1,14 @@
+2023-08-10 
+Learn through 'exicyclog' and  'eximstats' from EXIM distribution.
+There are must be all tools for complete parsing with a every parameters
+and ability to implement database logging "from box".
+
+Exim doc said: 
+#> 51.1 Logging to local files
+#> -A utility script called exicyclog which renames and compresses the main and reject logs each time it is called is provided for use with logs written to local files. The maximum number of old logs to keep can be set. It is suggested this is run as a daily cron job. 
+#> -A Perl script called eximstats which does simple analysis of main log files is also provided. See chapter 53 for details of both these utilities.
+
+2023-08-10
+Rewrite parser to differentiate sender and receiver 
+via  marked parameters from Exim_log (H=  U=  P= id=).
+These parameters described at https://www.exim.org/exim-html-3.20/doc/html/spec_51.html#SEC855
