@@ -52,8 +52,8 @@ if (@flag[0]){ 		#Если флаг вообще имеет место, тогд
 #флаг - в число:
 	if 		(@flag[0] eq "<="){$flag=1;}	#incoming
 	elsif	(@flag[0] eq "=>"){$flag=2;}	#outgoing	
-	elsif	(@flag[0] eq "=="){$flag=3;}	#delayed
-	elsif	(@flag[0] eq "**"){$flag=4;}	#stalled
+	elsif	(@flag[0] eq "=="){$flag=3;}	#deferred
+	elsif	(@flag[0] eq "**"){$flag=4;}	#failed
 
 # Дерём первый встретившийся email. 
 # Это вариант regexp без бюрократического соблюдения RFC-5322, как у emailregex.com, но работает.
