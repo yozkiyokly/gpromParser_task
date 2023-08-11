@@ -1,7 +1,11 @@
+2023-08-11
+-Add setup scripting part to quick init database for MariaDB or PostgreSQL.
+-Update dbAbstraction interface DBI to something actual.
+
 2023-08-10 
-Learn through 'exicyclog' and  'eximstats' from EXIM distribution.
-There are must be all tools for complete parsing with a every parameters
-and ability to implement database logging "from box".
+Learn through 'exicyclog' and  'eximstats' utilities code from EXIM distribution.
+There are must be all tools for complete parsing with a every parameters and ability 
+to implement database logging "from box", so reusing them is possible way to simplify this project.
 
 Exim doc said: 
 #> 51.1 Logging to local files
