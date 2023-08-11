@@ -1,8 +1,8 @@
 # Exim Maillog parser with DBstorage and rapid analisys abilities
-Perl CGI script index.pl parsing an EXIM  maillog file (see specs. https://www.exim.org/exim-html-3.20/doc/html/spec_51.html) and pushes divided data to Database fields. We  use two tables: InnoDB (message) and MEMORY (log). InnoDB is used just for keeping data for case of SQLserver crash or reboot.
+Perl CGI script index.pl parsing an EXIM  maillog file (see specs. https://www.exim.org/exim-html-3.20/doc/html/spec_51.html) and pushes divided data to database. We  use two tables: InnoDB (message) and MEMORY (log). InnoDB is used just for keeping data for case of SQLserver crash or reboot.
 There is ability to restore MEMORY table from innoDB table in any time.
 
-MEMORY table is used for quick analisys via fulltext search from browser window. 
+MEMORY table is used for quick analisys via fulltext search by sender address from browser window. 
 This trick with MEMORY table engine is pretty good to analisys really big logs, 
 for example for searching data after mailbombing or track user mail till long period.
 
